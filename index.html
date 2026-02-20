@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luma — A Calmer Way to Work</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===============================
+   DESIGN SYSTEM
+================================ */
+
+:root{
+  --bg:#f5f5f7;
+  --text:#1d1d1f;
+  --muted:#6e6e73;
+  --glass:rgba(255,255,255,0.65);
+  --card:rgba(255,255,255,0.9);
+  --border:rgba(0,0,0,0.06);
+  --accent:#0071e3;
+  --max:1200px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b0b0f;
+    --text:#f5f5f7;
+    --muted:#86868b;
+    --glass:rgba(25,25,30,0.6);
+    --card:rgba(18,18,22,0.9);
+    --border:rgba(255,255,255,0.08);
+    --accent:#2997ff;
+  }
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* ===============================
+   NAVBAR
+================================ */
+
+.navbar{
+  position:fixed;
+  width:100%;
+  top:0;
+  z-index:1000;
+  backdrop-filter:blur(30px) saturate(180%);
+  background:var(--glass);
+  border-bottom:1px solid var(--border);
+}
+
+.nav-inner{
+  max-width:var(--max);
+  margin:auto;
+  padding:18px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo{
+  font-weight:700;
+  letter-spacing:-0.5px;
+}
+
+.nav-links a{
+  margin-left:28px;
+  text-decoration:none;
+  color:var(--muted);
+  font-weight:500;
+  transition:.3s;
+}
+
+.nav-links a:hover{ color:var(--text); }
+
+/* ===============================
+   HERO
+================================ */
+
+.hero{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  position:relative;
+  padding:0 20px;
+  overflow:hidden;
+}
+
+.hero h1{
+  font-size:clamp(3rem,6vw,6rem);
+  font-weight:800;
+  letter-spacing:-2px;
+  line-height:1.05;
+  transition:transform .4s ease;
+}
+
+.hero p{
+  margin-top:30px;
+  font-size:1.35rem;
+  color:var(--muted);
+  max-width:760px;
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  width:1400px;
+  height:1400px;
+  background:radial-gradient(circle,var(--accent),transparent 65%);
+  opacity:.08;
+  filter:blur(150px);
+  animation:pulse 18s ease-in-out infinite;
+  z-index:-1;
+}
+
+/* ===============================
+   SECTION ANIMATION BASE
+================================ */
+
+.section{
+  max-width:var(--max);
+  margin:auto;
+  padding:140px 30px;
+  opacity:0;
+  transform:translateY(80px);
+  transition:all 1.2s cubic-bezier(.19,1,.22,1);
+}
+
+.section.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.section-header{
+  margin-bottom:70px;
+}
+
+/* ===============================
+   PRODUCT CARD
+================================ */
+
+.product{
+  margin-bottom:40px;
+  padding:50px;
+  border-radius:30px;
+  background:var(--card);
+  border:1px solid var(--border);
+  backdrop-filter:blur(25px);
+  transition:all .8s cubic-bezier(.19,1,.22,1);
+  opacity:0;
+  transform:translateY(60px) scale(.98);
+}
+
+.product.visible{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+.product:hover{
+  transform:translateY(-8px) scale(1.01);
+  box-shadow:0 40px 100px rgba(0,0,0,.08);
+}
+
+.product h3{
+  font-size:1.8rem;
+  font-weight:700;
+  margin-bottom:16px;
+}
+
+.product p{
+  font-size:1.1rem;
+  line-height:1.6;
+  color:var(--muted);
+}
+
+/* ===============================
+   CONTACT
+================================ */
+
+.contact{
+  text-align:center;
+  padding:180px 20px;
+  opacity:0;
+  transform:translateY(80px);
+  transition:all 1.2s cubic-bezier(.19,1,.22,1);
+}
+
+.contact.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ===============================
+   FOOTER
+================================ */
+
+footer{
+  border-top:1px solid var(--border);
+  background:var(--card);
+  padding:80px 30px 40px;
+}
+
+.footer-inner{
+  max-width:var(--max);
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:50px;
+}
+
+.footer-col h4{
+  margin-bottom:20px;
+  font-weight:600;
+}
+
+.footer-col a,
+.footer-col p{
+  display:block;
+  margin-bottom:12px;
+  text-decoration:none;
+  color:var(--muted);
+  transition:.3s;
+}
+
+.footer-col a:hover{ color:var(--text); }
+
+.footer-bottom{
+  margin-top:60px;
+  padding-top:30px;
+  border-top:1px solid var(--border);
+  text-align:center;
+  font-size:.8rem;
+  color:var(--muted);
+}
+
+/* ===============================
+   ANIMATIONS
+================================ */
+
+@keyframes pulse{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.1);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <div class="nav-inner">
+    <div class="logo">Luma</div>
+    <div class="nav-links">
+      <a href="#regulation">Regulation</a>
+      <a href="#focus">Focus</a>
+      <a href="#expression">Expression</a>
+      <a href="#system">System</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</div>
+
+<section class="hero">
+  <h1>Calm. Controlled. Precise.</h1>
+  <p>Luma is a premium ecosystem of macOS tools engineered to regulate cognitive load, sharpen focus, and elevate mental performance.</p>
+</section>
+
+<section id="regulation" class="section">
+  <div class="section-header">
+    <h2>Regulation</h2>
+    <p>Stability before performance. Control before output.</p>
+  </div>
+
+  <div class="product">
+    <h3>Anchor</h3>
+    <p>Instant cognitive stabilization. Anchor suppresses overstimulation, quiets mental noise, and restores executive control within seconds.</p>
+  </div>
+
+  <div class="product">
+    <h3>Threshold</h3>
+    <p>A deliberate pause between impulse and action. Threshold prevents spirals, compulsive switching, and cognitive fragmentation.</p>
+  </div>
+
+  <div class="product">
+    <h3>ZenEyes</h3>
+    <p>Reduces digital fatigue and visual strain. Built for long study sessions and high-output days.</p>
+  </div>
+
+  <div class="product">
+    <h3>Soft Screen</h3>
+    <p>Adaptive light modulation for late-night clarity. Protects sensory bandwidth without sacrificing performance.</p>
+  </div>
+</section>
+
+<section id="focus" class="section">
+  <div class="section-header">
+    <h2>Focus</h2>
+    <p>Depth without friction.</p>
+  </div>
+
+  <div class="product">
+    <h3>QuietQuest</h3>
+    <p>Subtle behavioral reinforcement that nudges you back into productive flow before distraction compounds.</p>
+  </div>
+
+  <div class="product">
+    <h3>MindPing</h3>
+    <p>Precision attention recall. Pulls your awareness back at exactly the right moment.</p>
+  </div>
+
+  <div class="product">
+    <h3>FocusGlass</h3>
+    <p>Structured deep-work architecture designed for elite concentration cycles.</p>
+  </div>
+
+  <div class="product">
+    <h3>Aether Focus</h3>
+    <p>High-performance productivity control center built for sustained cognitive output.</p>
+  </div>
+</section>
+
+<section id="expression" class="section">
+  <div class="section-header">
+    <h2>Expression</h2>
+    <p>Release pressure. Regain clarity.</p>
+  </div>
+
+  <div class="product">
+    <h3>VentCore</h3>
+    <p>Private emotional decompression. Release cognitive pressure without judgment or friction.</p>
+  </div>
+
+  <div class="product">
+    <h3>Atlas</h3>
+    <p>Structured thought mapping for resolving confusion and reclaiming mental clarity.</p>
+  </div>
+</section>
+
+<section id="system" class="section">
+  <div class="section-header">
+    <h2>System</h2>
+  </div>
+
+  <div class="product">
+    <h3>Safari</h3>
+    <p>Intentional research environment. No wandering. No drift. Just deliberate discovery.</p>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <h2>Built for thinkers.</h2>
+  <p>Enterprise partnerships. Early access. Strategic collaborations.</p>
+  <a href="mailto:contact.luma.inc@gmail.com">contact.luma.inc@gmail.com</a>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>Luma Inc.</h4>
+      <p>Technology for cognitive clarity.</p>
+      <p>Founded 2026.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Careers</a>
+      <a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Licensing</a>
+      <a href="#">Data Protection</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>contact.luma.inc@gmail.com</p>
+      <p>Global — Remote</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 Luma Inc. All rights reserved.
+  </div>
+</footer>
+
+<script>
+document.addEventListener("contextmenu", function(e) {
+  e.preventDefault();
+});
+</script>
+   
+<script>
+document.addEventListener("keydown", function(e) {
+
+  // F12
+  if (e.key === "F12") {
+    e.preventDefault();
+  }
+
+  // Ctrl+Shift+I (Windows)
+  if (e.ctrlKey && e.shiftKey && e.key === "I") {
+    e.preventDefault();
+  }
+
+  // Ctrl+Shift+J
+  if (e.ctrlKey && e.shiftKey && e.key === "J") {
+    e.preventDefault();
+  }
+
+  // Ctrl+U (View Source)
+  if (e.ctrlKey && e.key === "u") {
+    e.preventDefault();
+  }
+
+});
+</script>
+
+<script>
+setInterval(function() {
+  if (window.outerWidth - window.innerWidth > 160 ||
+      window.outerHeight - window.innerHeight > 160) {
+    document.body.innerHTML = "";
+  }
+}, 1000);
+</script>
+
+<script>
+/* ===============================
+   CINEMATIC SCROLL SYSTEM
+================================ */
+
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+    }
+  });
+},{
+  threshold:0.15
+});
+
+document.querySelectorAll('.section, .contact').forEach(el=>{
+  observer.observe(el);
+});
+
+document.querySelectorAll('.product').forEach((el,i)=>{
+  el.style.transitionDelay = (i % 4) * 0.1 + "s";
+  observer.observe(el);
+});
+
+/* ===============================
+   HERO PARALLAX
+================================ */
+
+window.addEventListener('scroll', ()=>{
+  const hero = document.querySelector('.hero h1');
+  const offset = window.scrollY * 0.2;
+  hero.style.transform = `translateY(${offset}px)`;
+});
+
+</script>
+
+</body>
+</html>
