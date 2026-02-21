@@ -45,6 +45,160 @@ body{
   overflow-x:hidden;
 }
 
+::selection{
+  background:var(--accent);
+  color:white;
+}
+
+img{
+  -webkit-user-drag:none;
+  user-select:none;
+}
+
+a{
+  cursor:pointer;
+}
+
+/* ===============================
+   CINEMATIC IMAGE BREAK
+================================ */
+
+/* ===============================
+   CINEMATIC IMAGE BREAK – LUMA
+================================ */
+
+.cinematic{
+  position:relative;
+  height:110vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  padding:0 6vw;
+  perspective:1800px;
+}
+
+/* Ambient gradient glow */
+.cinematic::before{
+  content:"";
+  position:absolute;
+  inset:-20%;
+  background:
+    radial-gradient(circle at 50% 50%, var(--accent) 0%, transparent 60%),
+    radial-gradient(circle at 20% 80%, rgba(255,255,255,.06), transparent 70%);
+  opacity:.08;
+  filter:blur(160px);
+  z-index:-2;
+  transition:opacity .6s ease;
+}
+
+/* Subtle edge vignette */
+.cinematic::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center,
+    transparent 60%,
+    rgba(0,0,0,.15) 100%);
+  pointer-events:none;
+  z-index:-1;
+}
+
+/* Inner wrapper */
+.cinematic-inner{
+  width:100%;
+  max-width:1900px;
+  transform:translateY(80px) scale(.96) rotateX(6deg);
+  opacity:0;
+  transition:
+    transform 1.6s cubic-bezier(.19,1,.22,1),
+    opacity 1.4s ease;
+  will-change:transform;
+}
+
+.cinematic-inner.visible{
+  transform:translateY(0) scale(1) rotateX(0deg);
+  opacity:1;
+}
+
+/* Image */
+.cinematic img{
+  width:100%;
+  height:auto;
+  aspect-ratio: 2/1;
+  object-fit:cover;
+  border-radius:36px;
+
+  box-shadow:
+    0 100px 260px rgba(0,0,0,.25),
+    0 0 0 1px rgba(255,255,255,.06) inset;
+
+  transition:
+    transform 1.6s cubic-bezier(.19,1,.22,1),
+    box-shadow .6s ease,
+    filter .8s ease;
+
+  filter:contrast(1.04) saturate(1.06);
+}
+
+/* Hover = depth lift */
+.cinematic:hover img{
+  transform:scale(1.025) translateZ(40px);
+  box-shadow:
+    0 120px 260px rgba(0,0,0,.28),
+    0 0 0 1px rgba(255,255,255,.08) inset;
+}
+
+/* Dark mode tuning */
+@media (prefers-color-scheme: dark){
+  .cinematic::after{
+    background:radial-gradient(circle at center,
+      transparent 55%,
+      rgba(0,0,0,.5) 100%);
+  }
+
+  .cinematic img{
+    box-shadow:
+      0 90px 240px rgba(0,0,0,.55),
+      0 0 0 1px rgba(255,255,255,.04) inset;
+  }
+}
+
+/* Responsive refinement */
+@media(max-width:768px){
+  .cinematic{
+    height:80vh;
+    padding:0 24px;
+  }
+
+  .cinematic-inner{
+    transform:translateY(60px) scale(.98);
+  }
+}
+
+@media (prefers-color-scheme: light){
+  .navbar{
+    background:linear-gradient(
+      to bottom,
+      rgba(255,255,255,.85),
+      rgba(255,255,255,.65)
+    );
+    box-shadow:0 8px 40px rgba(0,0,0,.05);
+  }
+}
+
+@media (prefers-color-scheme: dark){
+  .navbar{
+    background:linear-gradient(
+      to bottom,
+      rgba(15,15,20,.85),
+      rgba(15,15,20,.65)
+    );
+    box-shadow:
+      0 8px 40px rgba(0,0,0,.6),
+      0 0 0 1px rgba(255,255,255,.04) inset;
+  }
+}
 /* ===============================
    NAVBAR
 ================================ */
@@ -54,9 +208,12 @@ body{
   width:100%;
   top:0;
   z-index:1000;
-  backdrop-filter:blur(30px) saturate(180%);
-  background:var(--glass);
+
+  backdrop-filter:blur(40px) saturate(180%);
+  -webkit-backdrop-filter:blur(40px) saturate(180%);
+
   border-bottom:1px solid var(--border);
+  transition:background .4s ease, box-shadow .4s ease;
 }
 
 .nav-inner{
@@ -126,6 +283,18 @@ body{
   z-index:-1;
 }
 
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    transparent 60%,
+    var(--bg) 100%
+  );
+  pointer-events:none;
+}
+
 /* ===============================
    SECTION ANIMATION BASE
 ================================ */
@@ -170,8 +339,10 @@ body{
 }
 
 .product:hover{
-  transform:translateY(-8px) scale(1.01);
-  box-shadow:0 40px 100px rgba(0,0,0,.08);
+  transform:translateY(-12px) scale(1.015);
+  box-shadow:
+    0 60px 160px rgba(0,0,0,.12),
+    0 0 0 1px rgba(255,255,255,.04) inset;
 }
 
 .product h3{
@@ -276,6 +447,12 @@ footer{
 <section class="hero">
   <h1>Calm. Controlled. Precise.</h1>
   <p>Luma is a premium ecosystem of macOS tools engineered to regulate cognitive load, sharpen focus, and elevate mental performance.</p>
+</section>
+
+<section class="cinematic">
+  <div class="cinematic-inner">
+    <img src="hero-card.png" alt="Luma interface preview">
+  </div>
 </section>
 
 <section id="regulation" class="section">
@@ -431,15 +608,6 @@ document.addEventListener("keydown", function(e) {
 </script>
 
 <script>
-setInterval(function() {
-  if (window.outerWidth - window.innerWidth > 160 ||
-      window.outerHeight - window.innerHeight > 160) {
-    document.body.innerHTML = "";
-  }
-}, 1000);
-</script>
-
-<script>
 /* ===============================
    CINEMATIC SCROLL SYSTEM
 ================================ */
@@ -451,10 +619,10 @@ const observer = new IntersectionObserver((entries)=>{
     }
   });
 },{
-  threshold:0.15
+  threshold:0.25
 });
 
-document.querySelectorAll('.section, .contact').forEach(el=>{
+document.querySelectorAll('.section, .contact, .cinematic-inner').forEach(el=>{
   observer.observe(el);
 });
 
@@ -462,6 +630,7 @@ document.querySelectorAll('.product').forEach((el,i)=>{
   el.style.transitionDelay = (i % 4) * 0.1 + "s";
   observer.observe(el);
 });
+
 
 /* ===============================
    HERO PARALLAX
